@@ -51,6 +51,9 @@ public class CharacterInformation : MonoBehaviour
 
         {"Duel Damage", PendantLibrary.PendantLibraryTable["Magic"]},
         {"Duel Style", PendantLibrary.PendantLibraryTable["Blitz"]},
+
+        //{"Jump", PendantLibrary.PendantLibraryTable["Jump"]},
+        //{"Double Jump", PendantLibrary.PendantLibraryTable["Double Jump"]},
     };
 
     public Dictionary<string,Weapon> Weapons = new Dictionary<string, Weapon>()
