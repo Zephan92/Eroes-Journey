@@ -3,20 +3,57 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Tracker : MonoBehaviour {
-    private Image[] zoneImages;
-	// Use this for initialization
-	void Start () {
-        zoneImages = GetComponentsInChildren<Image>();
-	}
-
-    // Update is called once per frame
-    public void changeTrackerZone(Zones zone)
+    private CharacterInformation ci;
+    private Zones lastZone;
+    private GameObject tracker;
+    private int numRows = 1;
+    void Start ()
     {
-        foreach (Image z in zoneImages)
+        ci = gameObject.GetComponent<CharacterInformation>();
+        lastZone = ci.Zone;
+        
+        if (gameObject.tag.Equals("Player 1"))
         {
-            z.color = Color.white;
-            if(z.GetComponent<ChangeCharacterZone>().zone == zone)
-                z.color = new Color32(0, 120, 230, 255);
+            tracker = GameObject.FindGameObjectWithTag("Tracker 1");
         }
+        else
+        {
+            tracker = GameObject.FindGameObjectWithTag("Tracker 2");
+        }
+
+        if (ci.Pendants.ContainsKey("Double Jump"))
+        {
+            numRows = 3;
+        }
+        else if (ci.Pendants.ContainsKey("Jump"))
+        {
+            numRows = 2;
+        }
+        else
+        {
+            for (int r = 0; r < numRows; r++)
+            {
+                for (int c = 0; c < numRows; c++)
+                {
+
+                }
+            }
+           GameObject tp = Instantiate(Resources.Load("Tracker Panel")) as GameObject;
+        }
+    }
+
+    void Update()
+    {
+        if (ci.Zone != lastZone)
+        {
+
+            updateTrackerDisplay();
+            lastZone = ci.Zone;
+        }
+    }
+
+    public void updateTrackerDisplay()
+    {
+        Debug.Log("Changing Display");
     }
 }

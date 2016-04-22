@@ -53,7 +53,9 @@ public class PendantLibrary {
         {"Explosive", new Pendant("Explosive",PendantClass.DuelStyle)},
         {"Tank", new Pendant("Tank", PendantClass.DuelStyle)},
         {"Blitz", new Pendant("Blitz", PendantClass.DuelStyle)},
-        
+
+        {"Jump", new Pendant("Jump", PendantClass.Key) },
+        {"Double Jump", new Pendant("Double Jump", PendantClass.Key) },
         //Power, Defense, Speed
         //1,1,1 Balanced
         //2,0,1 Striker
