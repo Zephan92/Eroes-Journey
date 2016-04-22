@@ -7,6 +7,7 @@ public class Tracker : MonoBehaviour {
     private CharacterInformation ci;
     private Zones lastZone;
     private GameObject tracker;
+    private GameObject opponent;
     private int numRows = 1;
     public List<GameObject> zones;
 
@@ -18,10 +19,12 @@ public class Tracker : MonoBehaviour {
         if (gameObject.tag.Equals("Player 1"))
         {
             tracker = GameObject.FindGameObjectWithTag("Tracker 1");
+            opponent = GameObject.FindGameObjectWithTag("Player 2");
         }
         else
         {
             tracker = GameObject.FindGameObjectWithTag("Tracker 2");
+            opponent = GameObject.FindGameObjectWithTag("Player 1");
         }
 
         if (ci.Pendants.ContainsKey("Double Jump"))
@@ -41,11 +44,10 @@ public class Tracker : MonoBehaviour {
                 tp.transform.SetParent(tracker.transform);
                 tp.transform.localPosition = new Vector3(c*50,r*-50,0);
                 zones.Add(tp);
-                Debug.Log("Added image");
             }
         }
         
-        zones[convertZoneToInt(ci.Zone)].GetComponent<Image>().color = Color.blue;
+        zones[convertZoneToInt(ci.Zone, tag)].GetComponent<Image>().color = Color.blue;
     }
 
     void Update()
@@ -59,7 +61,7 @@ public class Tracker : MonoBehaviour {
 
     public void updateTrackerDisplay()
     {
-        int zNum = convertZoneToInt(ci.Zone);
+        int zNum = convertZoneToInt(ci.Zone, tag);
 
         for (int i = 0; i < zones.Count; i++)
             if(i == zNum)
@@ -68,7 +70,25 @@ public class Tracker : MonoBehaviour {
                 zones[i].GetComponent<Image>().color = Color.white;
     }
 
-    public int convertZoneToInt(Zones currentZone)
+    public void updateTracker2Display()
+    {
+        CharacterInformation oci = opponent.GetComponent<CharacterInformation>();
+        List<int> toZones = new List<int>();
+        foreach (SpecialAttack attack in ci.CurrentWeapon.Attacks.Values)
+        {
+            foreach (Zones z in attack.FromZones)
+                toZones.Add(convertZoneToInt(z, opponent.tag));
+        }
+
+        int zNum = convertZoneToInt(oci.Zone, opponent.tag);
+        for (int i = 0; i < zones.Count; i++)
+            if (toZones.Contains(i))
+                opponent.GetComponent<Tracker>().zones[i].GetComponent<Image>().color = Color.red;
+            else
+                opponent.GetComponent<Tracker>().zones[i].GetComponent<Image>().color = Color.white;
+    }
+
+    public int convertZoneToInt(Zones currentZone, string tag)
     {
         int x;
         int y;
@@ -88,14 +108,14 @@ public class Tracker : MonoBehaviour {
             y = 0;
 
         if (currentZone.ToString().Contains("Long"))
-            if (gameObject.tag.Equals("Player 1"))
+            if (tag.Equals("Player 1"))
                 x = 0;
             else
                 x = 2;
         else if (currentZone.ToString().Contains("Middle"))
             x = 1;
         else
-            if (gameObject.tag.Equals("Player 1"))
+            if (tag.Equals("Player 1"))
                 x = 2;
             else
                 x = 0;

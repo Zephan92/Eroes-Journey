@@ -21,6 +21,7 @@ public class DuelController : MonoBehaviour
     public Text player2StatsText;
     public DuelStates currentState = DuelStates.PreBattle;
     private BattleTimer bt;
+    private bool hasDisplayedStats;
 
     private GameObject pausedUI, battleStartUI, KOUI, victoryUI, defeatUI, drawUI, readyUI,startUI;//UI's
 
@@ -39,13 +40,15 @@ public class DuelController : MonoBehaviour
         drawUI = GameObject.Find("Draw");
         readyUI = GameObject.Find("Ready");
         startUI = GameObject.Find("Start");
-        displayStats();
+        hasDisplayedStats = false;
     }
 
     void Update()
     {
         if (currentState == DuelStates.PreBattle)
         {
+            if(!hasDisplayedStats)
+                displayStats();
             if (Input.GetButtonDown("Submit"))
             {
                 currentState = DuelStates.Start;
@@ -161,6 +164,7 @@ public class DuelController : MonoBehaviour
 
         player1StatsText.text = player1Str;
         player2StatsText.text = player2Str;
+        hasDisplayedStats = true;
     }
 }
 

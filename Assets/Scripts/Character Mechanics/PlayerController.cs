@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour {
 	void Update() {
         if (dc.currentState == DuelStates.Start)
         {
-
+            GetComponent<Tracker>().updateTracker2Display();
         }
         else if (dc.currentState == DuelStates.Battle)
         {
@@ -64,6 +64,10 @@ public class PlayerController : MonoBehaviour {
             {
                 InitiateSpecialAttack(cci.Weapons["Weapon 2"]);
             }
+            if (Input.GetButtonDown("Fire3"))
+            {
+                SwitchWeapon();
+            }
         }
     }
 
@@ -91,5 +95,11 @@ public class PlayerController : MonoBehaviour {
             wc.dealDamageToOpponent(healthRecoil, energyRecoil, healthDrain, energyDrain);
         }
         
+    }
+
+    private void SwitchWeapon()
+    {
+        cci.CurrentWeapon = cci.CurrentWeapon.Equals(cci.Weapons["Weapon 1"]) ? cci.Weapons["Weapon 2"] : cci.Weapons["Weapon 1"];
+        GetComponent<Tracker>().updateTracker2Display();
     }
 }

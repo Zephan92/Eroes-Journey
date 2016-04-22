@@ -62,11 +62,22 @@ public class CharacterInformation : MonoBehaviour
         {"Weapon 2", WeaponLibrary.WeaponLibraryTable["Apple Picker"] },
     };
 
-    public Zones Zone = Zones.GroundMiddle;
-    public float MagicDefense = 0;
-    public float PhysicalDefense = 0;
-    public Health Health = new Health(100, 100);
-    public Energy Energy = new Energy(100, 100);
+    public Zones Zone;
+    public float MagicDefense;
+    public float PhysicalDefense;
+    public Health Health;
+    public Energy Energy;
+    public Weapon CurrentWeapon;
+
+    void Start()
+    {
+        CurrentWeapon = Weapons["Weapon 1"];
+        MagicDefense = 0;
+        PhysicalDefense = 0;
+        Health = new Health(100, 100);
+        Energy = new Energy(100, 100);
+        Zone = Zones.GroundMiddle;
+    }
 
     public void updateHealth(float healthChange)
     {
