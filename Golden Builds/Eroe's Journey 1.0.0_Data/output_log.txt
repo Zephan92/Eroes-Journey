@@ -1,3 +1,13 @@
+Mono path[0] = 'C:/Users/Zephan/Desktop/Programming/Projects/Eroe's Journey/Golden Builds/Eroe's Journey 1.0.0_Data/Managed'
+Mono path[1] = 'C:/Users/Zephan/Desktop/Programming/Projects/Eroe's Journey/Golden Builds/Eroe's Journey 1.0.0_Data/Mono'
+Mono config path = 'C:/Users/Zephan/Desktop/Programming/Projects/Eroe's Journey/Golden Builds/Eroe's Journey 1.0.0_Data/Mono/etc'
+PlayerConnection initialized from C:/Users/Zephan/Desktop/Programming/Projects/Eroe's Journey/Golden Builds/Eroe's Journey 1.0.0_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55394
+Multi-casting "[IP] 192.168.0.102 [Port] 55394 [Flags] 3 [Guid] 3485148537 [EditorId] 3337585966 [Version] 1048832 [Id] WindowsPlayer(Johnson-PC) [Debug] 1" to [225.0.0.222:54997]...
+Waiting for connection from host on [192.168.0.102:55394]...
+PlayerConnection accepted from [192.168.0.102] handle:0x2f8
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,defer=y,address=0.0.0.0:56537
+PlayerConnection already initialized - listening to [192.168.0.102:55394]
 Initialize engine version: 5.3.4f1 (fdbb5133b820)
 GfxDevice: creating device client; threaded=1
 Direct3D:
@@ -14,7 +24,7 @@ Platform assembly: C:\Users\Zephan\Desktop\Programming\Projects\Eroe's Journey\G
 Loading C:\Users\Zephan\Desktop\Programming\Projects\Eroe's Journey\Golden Builds\Eroe's Journey 1.0.0_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Zephan\Desktop\Programming\Projects\Eroe's Journey\Golden Builds\Eroe's Journey 1.0.0_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Zephan\Desktop\Programming\Projects\Eroe's Journey\Golden Builds\Eroe's Journey 1.0.0_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.328 seconds
+- Completed reload, in  0.044 seconds
 Platform assembly: C:\Users\Zephan\Desktop\Programming\Projects\Eroe's Journey\Golden Builds\Eroe's Journey 1.0.0_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Zephan\Desktop\Programming\Projects\Eroe's Journey\Golden Builds\Eroe's Journey 1.0.0_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
@@ -22,13 +32,16 @@ desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 14.257410 ms
+UnloadTime: 0.556212 ms
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: fc -> priority: 1 
-  Thread -> id: 26dc -> priority: 1 
-Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 4.405874 ms
+  Thread -> id: 2c64 -> priority: 1 
+  Thread -> id: 330 -> priority: 1 
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 5.162629 ms
+System memory in use before: 16.1 MB.
+System memory in use after: 16.2 MB.
 
-Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 719.
-Total: 0.275934 ms (FindLiveObjects: 0.023685 ms CreateObjectMapping: 0.020922 ms MarkObjects: 0.226984 ms  DeleteObjects: 0.003552 ms)
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 634.
+Total: 0.264487 ms (FindLiveObjects: 0.020527 ms CreateObjectMapping: 0.016579 ms MarkObjects: 0.219484 ms  DeleteObjects: 0.003552 ms)
 
+Waiting for finish

@@ -4,34 +4,42 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Tracker : MonoBehaviour {
-    private CharacterInformation ci;
-    private Zones lastZone;
-    private GameObject tracker;
+    private GameObject characterPositionTracker;
+    private GameObject characterAttackTracker;
+    public List<GameObject> attackZones;
+    public List<GameObject> positionZones;
     private GameObject opponent;
-    private int numRows = 1;
-    public List<GameObject> zones;
+    private GameObject player;
+    private CharacterInformation oci;
+    private CharacterInformation cci;
 
     void Start ()
-    {
-        ci = gameObject.GetComponent<CharacterInformation>();
-        lastZone = ci.Zone;
-        
-        if (gameObject.tag.Equals("Player 1"))
+    {        
+        if (tag.Equals("Player 1"))
         {
-            tracker = GameObject.FindGameObjectWithTag("Tracker 1");
-            opponent = GameObject.FindGameObjectWithTag("Player 2");
+            characterPositionTracker = GameObject.FindGameObjectWithTag("Position Tracker 1");
+            characterAttackTracker = GameObject.FindGameObjectWithTag("Attack Tracker 1");
         }
         else
         {
-            tracker = GameObject.FindGameObjectWithTag("Tracker 2");
-            opponent = GameObject.FindGameObjectWithTag("Player 1");
+            characterPositionTracker = GameObject.FindGameObjectWithTag("Position Tracker 2");
+            characterAttackTracker = GameObject.FindGameObjectWithTag("Attack Tracker 2");
         }
+        player = gameObject;
+        cci = player.GetComponent<CharacterInformation>();
+        opponent = cci.Opponent;
+        oci = opponent.GetComponent<CharacterInformation>();
+    }
 
-        if (ci.Pendants.ContainsKey("Double Jump"))
+    public void instantiatiatePlayerPanels(GameObject player)
+    {
+        int numRows = 1;
+
+        if (cci.Pendants.ContainsKey("Double Jump"))
         {
             numRows = 3;
         }
-        else if (ci.Pendants.ContainsKey("Jump"))
+        else if (cci.Pendants.ContainsKey("Jump"))
         {
             numRows = 2;
         }
@@ -40,67 +48,93 @@ public class Tracker : MonoBehaviour {
         {
             for (int c = 0; c < 3; c++)
             {
+                GameObject pp = Instantiate(Resources.Load("Player Position Panel")) as GameObject;
+                pp.transform.SetParent(characterPositionTracker.transform);
+                pp.transform.localPosition = new Vector3(c * 50, r * -50, 0);
+                positionZones.Add(pp);
+
                 GameObject tp = Instantiate(Resources.Load("Tracker Panel")) as GameObject;
-                tp.transform.SetParent(tracker.transform);
-                tp.transform.localPosition = new Vector3(c*50,r*-50,0);
-                zones.Add(tp);
+                tp.transform.SetParent(characterAttackTracker.transform);
+                tp.transform.localPosition = new Vector3(c * 50, r * -50, 0);
+                attackZones.Add(tp);
+
             }
         }
-        
-        zones[convertZoneToInt(ci.Zone, tag)].GetComponent<Image>().color = Color.blue;
+
+        positionZones[convertZoneToInt(cci.Zone, player, cci)].GetComponent<Image>().color = Color.blue;
     }
 
-    void Update()
+    public void updateTrackerDisplays()
     {
-        if (ci.Zone != lastZone)
+        updateAttackDisplay(player, cci);
+        updatePositionDiplay(player, cci);
+        updateAttackDisplay(opponent, oci);
+        updatePositionDiplay(opponent, oci);
+    }
+
+    public void updateAttackDisplay(GameObject targetPlayer, CharacterInformation targetCCI)
+    {
+        Tracker targetTracker = targetPlayer.GetComponent<Tracker>();
+        GameObject targetOpponent = targetCCI.Opponent;
+        CharacterInformation targetOCI = targetOpponent.GetComponent<CharacterInformation>();
+
+        Weapon opponentCurrentWeapon = targetOCI.CurrentWeapon;
+
+        int currentZone = convertZoneToInt(targetCCI.Zone, targetPlayer, targetCCI);
+        int opponentCurrentZone = convertZoneToInt(targetOCI.Zone, targetOpponent, targetOCI);
+
+        List<int> specialAttackToZones = new List<int>();
+
+        foreach (SpecialAttack attack in opponentCurrentWeapon.Attacks.Values)
         {
-            updateTrackerDisplay();
-            lastZone = ci.Zone;
-        }
-    }
-
-    public void updateTrackerDisplay()
-    {
-        int zNum = convertZoneToInt(ci.Zone, tag);
-
-        for (int i = 0; i < zones.Count; i++)
-            if(i == zNum)
-                zones[i].GetComponent<Image>().color = Color.blue;
-            else
-                zones[i].GetComponent<Image>().color = Color.white;
-    }
-
-    public void updateTracker2Display()
-    {
-        CharacterInformation oci = opponent.GetComponent<CharacterInformation>();
-        List<int> toZones = new List<int>();
-        foreach (SpecialAttack attack in ci.CurrentWeapon.Attacks.Values)
-        {
-            foreach (Zones z in attack.FromZones)
-                toZones.Add(convertZoneToInt(z, opponent.tag));
+            if (attack.FromZones.Contains(targetOCI.Zone))
+                foreach (Zones z in attack.ToZones)
+                    specialAttackToZones.Add(convertZoneToInt(z, targetPlayer, targetCCI));
         }
 
-        int zNum = convertZoneToInt(oci.Zone, opponent.tag);
-        for (int i = 0; i < zones.Count; i++)
-            if (toZones.Contains(i))
-                opponent.GetComponent<Tracker>().zones[i].GetComponent<Image>().color = Color.red;
+        for (int i = 0; i < targetTracker.attackZones.Count; i++)
+        {
+            if (specialAttackToZones.Contains(i))
+            {
+                if (convertZoneToInt(targetCCI.Zone, targetPlayer, targetCCI) == i)
+                    targetTracker.attackZones[i].GetComponent<Image>().color = Color.yellow;
+                else
+                    targetTracker.attackZones[i].GetComponent<Image>().color = Color.red;
+            }
             else
-                opponent.GetComponent<Tracker>().zones[i].GetComponent<Image>().color = Color.white;
+            {
+                targetTracker.attackZones[i].GetComponent<Image>().color = Color.white;
+            }
+        }
+                
     }
 
-    public int convertZoneToInt(Zones currentZone, string tag)
+    public void updatePositionDiplay(GameObject targetPlayer, CharacterInformation targetCCI)
+    {
+        Tracker t = targetPlayer.GetComponent<Tracker>();
+
+        int currentZone = convertZoneToInt(targetCCI.Zone, targetPlayer, targetCCI);
+
+        for (int i = 0; i < t.attackZones.Count; i++)
+            if (i == currentZone)
+                t.positionZones[i].GetComponent<Image>().color = Color.blue;
+            else
+                t.positionZones[i].GetComponent<Image>().color = Color.clear;
+    }
+
+    public int convertZoneToInt(Zones currentZone, GameObject targetPlayer, CharacterInformation targetCCI)
     {
         int x;
         int y;
         if (currentZone.ToString().Contains("Ground"))
-            if (ci.Pendants.ContainsKey("Double Jump"))
+            if (targetCCI.Pendants.ContainsKey("Double Jump"))
                 y = 6;
-            else if (ci.Pendants.ContainsKey("Jump"))
+            else if (targetCCI.Pendants.ContainsKey("Jump"))
                 y = 3;
             else
                 y = 0;
         else if (currentZone.ToString().Contains("Air"))
-            if (ci.Pendants.ContainsKey("Double Jump"))
+            if (targetCCI.Pendants.ContainsKey("Double Jump"))
                 y = 3;
             else 
                 y = 0;
@@ -108,17 +142,18 @@ public class Tracker : MonoBehaviour {
             y = 0;
 
         if (currentZone.ToString().Contains("Long"))
-            if (tag.Equals("Player 1"))
+            if (targetPlayer.tag.Equals("Player 1"))
                 x = 0;
             else
                 x = 2;
         else if (currentZone.ToString().Contains("Middle"))
             x = 1;
         else
-            if (tag.Equals("Player 1"))
+            if (targetPlayer.tag.Equals("Player 1"))
                 x = 2;
             else
                 x = 0;
         return x + y;
+        
     }
 }

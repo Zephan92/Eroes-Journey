@@ -61,13 +61,15 @@ public class CharacterInformation : MonoBehaviour
         {"Weapon 1", WeaponLibrary.WeaponLibraryTable["Beacon"] },
         {"Weapon 2", WeaponLibrary.WeaponLibraryTable["Apple Picker"] },
     };
-
+    
+        
     public Zones Zone;
     public float MagicDefense;
     public float PhysicalDefense;
     public Health Health;
     public Energy Energy;
     public Weapon CurrentWeapon;
+    public GameObject Opponent;
 
     void Start()
     {
@@ -77,6 +79,14 @@ public class CharacterInformation : MonoBehaviour
         Health = new Health(100, 100);
         Energy = new Energy(100, 100);
         Zone = Zones.GroundMiddle;
+        if (tag == "Player 2")
+        {
+            Opponent = GameObject.FindGameObjectWithTag("Player 1");
+        }
+        else
+        {
+            Opponent = GameObject.FindGameObjectWithTag("Player 2");
+        }
     }
 
     public void updateHealth(float healthChange)

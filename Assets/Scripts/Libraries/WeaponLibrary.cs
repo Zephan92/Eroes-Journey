@@ -19,8 +19,9 @@ public class Weapon
     public WeaponClass Rarity;
     public Dictionary<string, SpecialAttack> Attacks;
 
-    public Weapon(string Name, int p, int e, WeaponClass wc, Dictionary<string, SpecialAttack> a)
+    public Weapon(string n, int p, int e, WeaponClass wc, Dictionary<string, SpecialAttack> a)
     {
+        Name = n;
         Power = p;
         Energy = e;
         Rarity = wc;

@@ -46,9 +46,9 @@ public class NPCController : MonoBehaviour
 
             if (isGrounded && isJumping)
             {
-                isJumping = false;
-                isMidJump = true;
-                isGrounded = false;
+               // isJumping = false;
+               // isMidJump = true;
+                //isGrounded = false;
             }
 
             if (isMidJump)

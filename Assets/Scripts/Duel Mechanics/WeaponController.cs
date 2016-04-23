@@ -2,14 +2,13 @@
 using System.Collections;
 
 public class WeaponController : MonoBehaviour {
-    public GameObject opponent;
+    private GameObject opponent;
     private CharacterInformation charCI;
     private CharacterInformation oppCI;
-    //baseline attack cost is as follows: 12*damage - 6*recoil + oppEnergyCost;
 
-	// Use this for initialization
 	void Start () {
         charCI = gameObject.GetComponent<CharacterInformation>();
+        opponent = charCI.Opponent;
         oppCI = opponent.GetComponent<CharacterInformation>();
     }
 	
@@ -23,4 +22,6 @@ public class WeaponController : MonoBehaviour {
             oppCI.updateEnergy(oppEnergyChange);
         }
     }
+
+    //add energy cost method
 }

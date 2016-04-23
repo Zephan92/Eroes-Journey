@@ -47,8 +47,12 @@ public class DuelController : MonoBehaviour
     {
         if (currentState == DuelStates.PreBattle)
         {
-            if(!hasDisplayedStats)
+            if (!hasDisplayedStats)
+            {
                 displayStats();
+                player1.GetComponent<Tracker>().instantiatiatePlayerPanels(player1);
+                player2.GetComponent<Tracker>().instantiatiatePlayerPanels(player2);
+            }
             if (Input.GetButtonDown("Submit"))
             {
                 currentState = DuelStates.Start;
@@ -57,9 +61,10 @@ public class DuelController : MonoBehaviour
             }
         }
         else if (currentState == DuelStates.Start)
-        {
+        {//this happens tons of times
             Invoke("displayStartUI", 1.5f);
             Invoke("startBattle", 2f);
+
         }
         else if (currentState == DuelStates.Battle)
         {

@@ -8,5 +8,6 @@ public class ChangeCharacterZone : MonoBehaviour {
     {
        CharacterInformation ci =  other.GetComponent<CharacterInformation>();
        ci.Zone = zone;
+       other.GetComponent<Tracker>().updateTrackerDisplays();
     }
 }

@@ -11,14 +11,14 @@ public class SpecialAttack
     public List<Zones> FromZones;
     public List<Zones> ToZones;
 
-    public SpecialAttack(string n, float hdm, float edm, float hrm, float erm, List<Zones> az, List<Zones> tz)
+    public SpecialAttack(string n, float hdm, float edm, float hrm, float erm, List<Zones> fz, List<Zones> tz)
     {
         Name = n;
         HealthDrainModifier = hdm;
         EnergyDrainModifier = edm;
         HealthRecoilModifier = hrm;
         EnergyRecoilModifier = erm;
-        FromZones = az;
+        FromZones = fz;
         ToZones = tz;
     }
 }

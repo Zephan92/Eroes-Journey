@@ -27,14 +27,14 @@ public class PlayerController : MonoBehaviour {
 	void Update() {
         if (dc.currentState == DuelStates.Start)
         {
-            GetComponent<Tracker>().updateTracker2Display();
+            GetComponent<Tracker>().updateTrackerDisplays();
         }
         else if (dc.currentState == DuelStates.Battle)
         {
             if (Input.GetButtonDown("Jump") && isGrounded)
             {
-                isMidJump = true;
-                isGrounded = false;
+                //isMidJump = true;
+                //isGrounded = false;
             }
 
             if (isMidJump)
@@ -100,6 +100,6 @@ public class PlayerController : MonoBehaviour {
     private void SwitchWeapon()
     {
         cci.CurrentWeapon = cci.CurrentWeapon.Equals(cci.Weapons["Weapon 1"]) ? cci.Weapons["Weapon 2"] : cci.Weapons["Weapon 1"];
-        GetComponent<Tracker>().updateTracker2Display();
+        GetComponent<Tracker>().updateTrackerDisplays();
     }
 }
