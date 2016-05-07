@@ -10,7 +10,7 @@ public class EnergyBar : MonoBehaviour
     private RectTransform chrt;
     private CharacterInformation characterInformation;
     private Energy energy;
-    private Dictionary<string, Pendant> curPendants;
+    //private Dictionary<string, Pendant> curPendants;
 
     private float healthUnit;
     private RectTransform parentSize;
@@ -18,7 +18,7 @@ public class EnergyBar : MonoBehaviour
     void Start()
     {
         characterInformation = character.GetComponent<CharacterInformation>();
-        curPendants = characterInformation.Pendants;
+        //curPendants = characterInformation.Pendants;
         energy = characterInformation.Energy;
 
         chrt = currentEnergy.GetComponent<RectTransform>();

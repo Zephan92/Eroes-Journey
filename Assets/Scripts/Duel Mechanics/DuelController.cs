@@ -20,14 +20,13 @@ public class DuelController : MonoBehaviour
     public Text player1StatsText;
     public Text player2StatsText;
     public DuelStates currentState = DuelStates.PreBattle;
-    private BattleTimer bt;
     private bool hasDisplayedStats;
+    private bool hasDisplayedStart;
 
     private GameObject pausedUI, battleStartUI, KOUI, victoryUI, defeatUI, drawUI, readyUI,startUI;//UI's
 
     void Start()
     {
-        bt = GetComponent<BattleTimer>();
         player1 = GameObject.FindGameObjectWithTag("Player 1");
         player2 = GameObject.FindGameObjectWithTag("Player 2");
         player1Stats = player1.GetComponent<CharacterInformation>();
@@ -41,6 +40,7 @@ public class DuelController : MonoBehaviour
         readyUI = GameObject.Find("Ready");
         startUI = GameObject.Find("Start");
         hasDisplayedStats = false;
+        hasDisplayedStart = false;
     }
 
     void Update()
@@ -62,9 +62,12 @@ public class DuelController : MonoBehaviour
         }
         else if (currentState == DuelStates.Start)
         {//this happens tons of times
-            Invoke("displayStartUI", 1.5f);
-            Invoke("startBattle", 2f);
-
+            if (!hasDisplayedStart)
+            {
+                Invoke("displayStartUI", 1.0f);
+                Invoke("startBattle", 1.4f);
+                hasDisplayedStart = true;
+            }
         }
         else if (currentState == DuelStates.Battle)
         {
@@ -106,6 +109,8 @@ public class DuelController : MonoBehaviour
             {
                 currentState = DuelStates.Start;
                 pausedUI.GetComponent<CanvasGroup>().alpha = 0.0f;
+                readyUI.GetComponent<CanvasGroup>().alpha = 1.0f;
+                hasDisplayedStart = false;
             }
         }
         else

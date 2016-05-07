@@ -66,48 +66,48 @@ public class Tracker : MonoBehaviour {
 
     public void updateTrackerDisplays()
     {
-        updateAttackDisplay(player, cci);
+        //updateAttackDisplay(player, cci);
         updatePositionDiplay(player, cci);
-        updateAttackDisplay(opponent, oci);
+        //updateAttackDisplay(opponent, oci);
         updatePositionDiplay(opponent, oci);
     }
 
-    public void updateAttackDisplay(GameObject targetPlayer, CharacterInformation targetCCI)
-    {
-        Tracker targetTracker = targetPlayer.GetComponent<Tracker>();
-        GameObject targetOpponent = targetCCI.Opponent;
-        CharacterInformation targetOCI = targetOpponent.GetComponent<CharacterInformation>();
+    //public void updateAttackDisplay(GameObject targetPlayer, CharacterInformation targetCCI)
+    //{//This is not working out, should probably delete
+    //    Tracker targetTracker = targetPlayer.GetComponent<Tracker>();
+    //    GameObject targetOpponent = targetCCI.Opponent;
+    //    CharacterInformation targetOCI = targetOpponent.GetComponent<CharacterInformation>();
 
-        Weapon opponentCurrentWeapon = targetOCI.CurrentWeapon;
+    //    Weapon opponentCurrentWeapon = targetOCI.CurrentWeapon;
 
-        int currentZone = convertZoneToInt(targetCCI.Zone, targetPlayer, targetCCI);
-        int opponentCurrentZone = convertZoneToInt(targetOCI.Zone, targetOpponent, targetOCI);
+    //    int currentZone = convertZoneToInt(targetCCI.Zone, targetPlayer, targetCCI);
+    //    int opponentCurrentZone = convertZoneToInt(targetOCI.Zone, targetOpponent, targetOCI);
 
-        List<int> specialAttackToZones = new List<int>();
+    //    List<int> specialAttackToZones = new List<int>();
 
-        foreach (SpecialAttack attack in opponentCurrentWeapon.Attacks.Values)
-        {
-            if (attack.FromZones.Contains(targetOCI.Zone))
-                foreach (Zones z in attack.ToZones)
-                    specialAttackToZones.Add(convertZoneToInt(z, targetPlayer, targetCCI));
-        }
+    //    foreach (SpecialAttack attack in opponentCurrentWeapon.Attacks.Values)
+    //    {
+    //        if (attack.FromZones.Contains(targetOCI.Zone))
+    //            foreach (Zones z in attack.ToZones)
+    //                specialAttackToZones.Add(convertZoneToInt(z, targetPlayer, targetCCI));
+    //    }
 
-        for (int i = 0; i < targetTracker.attackZones.Count; i++)
-        {
-            if (specialAttackToZones.Contains(i))
-            {
-                if (convertZoneToInt(targetCCI.Zone, targetPlayer, targetCCI) == i)
-                    targetTracker.attackZones[i].GetComponent<Image>().color = Color.yellow;
-                else
-                    targetTracker.attackZones[i].GetComponent<Image>().color = Color.red;
-            }
-            else
-            {
-                targetTracker.attackZones[i].GetComponent<Image>().color = Color.white;
-            }
-        }
+    //    for (int i = 0; i < targetTracker.attackZones.Count; i++)
+    //    {
+    //        if (specialAttackToZones.Contains(i))
+    //        {
+    //            if (convertZoneToInt(targetCCI.Zone, targetPlayer, targetCCI) == i)
+    //                targetTracker.attackZones[i].GetComponent<Image>().color = Color.yellow;
+    //            else
+    //                targetTracker.attackZones[i].GetComponent<Image>().color = Color.white;
+    //        }
+    //        else
+    //        {
+    //            targetTracker.attackZones[i].GetComponent<Image>().color = Color.white;
+    //        }
+    //    }
                 
-    }
+    //}
 
     public void updatePositionDiplay(GameObject targetPlayer, CharacterInformation targetCCI)
     {
@@ -115,11 +115,18 @@ public class Tracker : MonoBehaviour {
 
         int currentZone = convertZoneToInt(targetCCI.Zone, targetPlayer, targetCCI);
 
-        for (int i = 0; i < t.attackZones.Count; i++)
+        for (int i = 0; i < t.positionZones.Count; i++)
             if (i == currentZone)
+            {
                 t.positionZones[i].GetComponent<Image>().color = Color.blue;
+                t.attackZones[i].GetComponent<Image>().color = Color.yellow;
+            }
             else
+            {
                 t.positionZones[i].GetComponent<Image>().color = Color.clear;
+                t.attackZones[i].GetComponent<Image>().color = Color.white;
+            }
+                
     }
 
     public int convertZoneToInt(Zones currentZone, GameObject targetPlayer, CharacterInformation targetCCI)

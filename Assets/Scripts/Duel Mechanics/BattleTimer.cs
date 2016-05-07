@@ -9,17 +9,11 @@ public class BattleTimer : MonoBehaviour
     public int battleDuration = 90;
     private int timeRemaining;
     private bool tickEngineStarted = false;
-    private CharacterInformation player1Stats;
-    private CharacterInformation player2Stats;
-    private Health player1Health;
-    private Health player2Health;
     public Text timer;
 
     void Start()
     {
-        dc = GameObject.FindGameObjectWithTag("GameController").GetComponent<DuelController>();
-        player1Stats = dc.player1.GetComponent<CharacterInformation>();
-        player2Stats = dc.player2.GetComponent<CharacterInformation>();
+        dc = GetComponent<DuelController>();
         timeRemaining = battleDuration;
         timer.text = convertToMinute(timeRemaining);
         
@@ -33,11 +27,6 @@ public class BattleTimer : MonoBehaviour
                 tickEngineStarted = true;
                 startTickEngine();
             }
-        }
-        else if (dc.currentState == DuelStates.Battle)
-        {
-            player1Health = player1Stats.Health;
-            player2Health = player2Stats.Health;
         }
 	}
 

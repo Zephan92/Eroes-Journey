@@ -9,14 +9,14 @@ public class HealthBar : MonoBehaviour {
     private RectTransform chrt;
     private CharacterInformation characterInformation;
     private Health health;
-    private Dictionary<string, Pendant> curPendants;
+    //private Dictionary<string, Pendant> curPendants;
     
     private float healthUnit;
     private RectTransform parentSize;
 
     void Start () {
         characterInformation = character.GetComponent<CharacterInformation>();
-        curPendants = characterInformation.Pendants;
+        //curPendants = characterInformation.Pendants;
         health = characterInformation.Health;
 
         chrt = currentHealth.GetComponent<RectTransform>();
