@@ -11,6 +11,8 @@ public class BoundaryTrigger : MonoBehaviour {
     
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Player: " + transform.position + "\nOther: " + other.transform.position);
+
         if (other.transform.position.x > transform.position.x)
         {
             boundaries[0] = other.GetComponent<BoxCollider>();
