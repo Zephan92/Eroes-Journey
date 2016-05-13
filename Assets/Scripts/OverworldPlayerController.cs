@@ -19,6 +19,7 @@ public class OverworldPlayerController : MonoBehaviour {
     public BoxCollider[] boundaries = new BoxCollider[4];
     private Vector3 move;
     private Vector2 destination;
+    private BoxCollider boundary;
 
     public bool Left
     {
@@ -49,11 +50,13 @@ public class OverworldPlayerController : MonoBehaviour {
     void Start()
     {
         _animator = GetComponent<Animator>();
+        boundary = GetComponentInChildren<BoxCollider>();
         Down = true;
         Up = false;
         Left = false;
         Right = false;
         Moving = false;
+        updateBoundaries(1.5f);
     }
 
     void Update()
@@ -108,13 +111,27 @@ public class OverworldPlayerController : MonoBehaviour {
     void FixedUpdate() {
         if (Moving)
         {
+            updateBoundaries(0.5f);
             movePlayer(playerDirection);
             if (destination == new Vector2(transform.position.x, transform.position.y))
             {
                 Moving = false;
+                cleanBoundaries();
+                updateBoundaries(1.5f);
             }
         }        
-     } 
+     }
+
+    public void updateBoundaries(float colliderLength)
+    {
+        boundary.size = new Vector3(colliderLength, colliderLength, 1);
+    }
+
+    public void cleanBoundaries()
+    {
+        for (int i = 0; i < boundaries.Length; i++)
+            boundaries[i] = null;
+    }
 
     public void updateDirectionBools(Direction dir)
     {
