@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class BattleTimer : MonoBehaviour
 {
-    private DuelController dc;
     public int battleDuration = 90;
     private int timeRemaining;
     private bool tickEngineStarted = false;
@@ -13,14 +12,13 @@ public class BattleTimer : MonoBehaviour
 
     void Start()
     {
-        dc = GetComponent<DuelController>();
         timeRemaining = battleDuration;
         timer.text = convertToMinute(timeRemaining);
         
     }
 
     void Update() {
-        if (dc.currentState == DuelStates.Start)
+        if (DuelController.control.currentState == DuelStates.Start)
         {
             if (!tickEngineStarted)
             {
@@ -37,13 +35,13 @@ public class BattleTimer : MonoBehaviour
 
 	private void _tick()
 	{
-        if(dc.currentState == DuelStates.Battle)
+        if(DuelController.control.currentState == DuelStates.Battle)
         { 
 			timeRemaining--;
 			timer.text = convertToMinute(battleDuration);
             if (timeRemaining <= 0)
             {
-                dc.currentState = DuelStates.Decision;
+                DuelController.control.currentState = DuelStates.Decision;
             }
             else
             {

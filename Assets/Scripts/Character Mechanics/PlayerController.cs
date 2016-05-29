@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour {
     public float jumpHeight = 5.0f;
     public float jumpSpeed = 0.6f;
     public float buffer = 0.2f;
-    private DuelController dc;
     private WeaponController wc;
     private CharacterController controller;
     private CharacterInformation cci;
@@ -17,7 +16,6 @@ public class PlayerController : MonoBehaviour {
 
     void Start ()
     {
-        dc = GameObject.FindGameObjectWithTag("GameController").GetComponent<DuelController>();
         wc = GetComponent<WeaponController>();
         cci = GetComponent<CharacterInformation>();
         oci = GetComponent<CharacterInformation>();
@@ -25,11 +23,11 @@ public class PlayerController : MonoBehaviour {
     }
 
 	void Update() {
-        if (dc.currentState == DuelStates.Start)
+        if (DuelController.control.currentState == DuelStates.Start)
         {
             GetComponent<Tracker>().updateTrackerDisplays();
         }
-        else if (dc.currentState == DuelStates.Battle)
+        else if (DuelController.control.currentState == DuelStates.Battle)
         {
             if (Input.GetButtonDown("Jump") && isGrounded)
             {

@@ -12,6 +12,7 @@ public enum Direction
 
 public class OverworldPlayerController : MonoBehaviour {
     private Animator _animator;
+    public static bool freeplay = true;
     public int pixelToUnits = 16;
     public float transitionTime = 0.4f;
     public Direction playerDirection = Direction.None;
@@ -61,50 +62,54 @@ public class OverworldPlayerController : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetButton("Horizontal") && !Moving)
+        if(freeplay)
         {
-            if (Input.GetAxis("Horizontal") > 0)
+
+            if (Input.GetButton("Horizontal") && !Moving)
             {
-                destination = new Vector2(transform.position.x + 16, transform.position.y);
-                playerDirection = Direction.Right;
-            } 
-            else
-            {
-                destination = new Vector2 (transform.position.x - 16, transform.position.y);
-                playerDirection = Direction.Left;
+                if (Input.GetAxis("Horizontal") > 0)
+                {
+                    destination = new Vector2(transform.position.x + 16, transform.position.y);
+                    playerDirection = Direction.Right;
+                }
+                else
+                {
+                    destination = new Vector2(transform.position.x - 16, transform.position.y);
+                    playerDirection = Direction.Left;
+                }
+
+                lookingDirection = playerDirection;
+                updateDirectionBools(playerDirection);
+                if (!checkForBoundary(playerDirection))
+                {
+                    Moving = true;
+                }
             }
-                
-            lookingDirection = playerDirection;
-            updateDirectionBools(playerDirection);
-            if (!checkForBoundary(playerDirection))
+            else if (Input.GetButton("Vertical") && !Moving)
             {
-                Moving = true;
-            }    
-        }
-        else if (Input.GetButton("Vertical") && !Moving)
-        {
-            if (Input.GetAxis("Vertical") > 0)
-            {
-                playerDirection = Direction.Up;
-                destination = new Vector2(transform.position.x, transform.position.y + 16);
+                if (Input.GetAxis("Vertical") > 0)
+                {
+                    playerDirection = Direction.Up;
+                    destination = new Vector2(transform.position.x, transform.position.y + 16);
+                }
+
+                else
+                {
+                    playerDirection = Direction.Down;
+                    destination = new Vector2(transform.position.x, transform.position.y - 16);
+                }
+
+                lookingDirection = playerDirection;
+                updateDirectionBools(playerDirection);
+                if (!checkForBoundary(playerDirection))
+                {
+                    Moving = true;
+                }
             }
-                
-            else
+            else if (!Moving)
             {
-                playerDirection = Direction.Down;
-                destination = new Vector2(transform.position.x, transform.position.y - 16);
+                playerDirection = Direction.None;
             }
-                
-            lookingDirection = playerDirection;
-            updateDirectionBools(playerDirection);
-            if (!checkForBoundary(playerDirection))
-            {
-                Moving = true;
-            }
-        }
-        else if(!Moving)
-        {
-            playerDirection = Direction.None;
         }
     }
 

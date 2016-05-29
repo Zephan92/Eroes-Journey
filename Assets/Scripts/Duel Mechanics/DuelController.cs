@@ -13,6 +13,21 @@ public enum DuelStates
 
 public class DuelController : MonoBehaviour
 {
+    public static DuelController control;
+
+    void Awake()
+    {
+        if (control == null)
+        {
+            control = this;
+        }
+        else if (control != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
     public GameObject player1;
     public GameObject player2;
     private CharacterInformation player1Stats;
@@ -99,8 +114,9 @@ public class DuelController : MonoBehaviour
         else if (currentState == DuelStates.End)
         {
             if (Input.GetButtonDown("Submit"))
-            {
-                SceneManager.LoadScene(0);
+            {//Do better than just loading this scene
+                SceneManager.LoadScene(1);
+                
             }
         }
         else if (currentState == DuelStates.Paused)

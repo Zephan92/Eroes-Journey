@@ -11,8 +11,12 @@ public class BoundaryTrigger : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Player: " + transform.position + "\nOther: " + other.transform.position);
-        Debug.Log("Updated Boundary");
+        if (other.tag.Equals("Gateway"))
+        {
+            return;
+        }
+            
+
         if (other.transform.position - new Vector3(0,0, other.transform.position.z) == transform.position + new Vector3(16,0,0))
         {
             boundaries[0] = other.GetComponent<BoxCollider>();

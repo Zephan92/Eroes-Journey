@@ -4,7 +4,6 @@ using System;
 
 public class NPCController : MonoBehaviour
 {
-    private DuelController dc;
 
     public float speed = 6.0F;
     public float jumpHeight = 5.0f;
@@ -22,14 +21,13 @@ public class NPCController : MonoBehaviour
     private bool aiEngineStarted = false;
     void Start()
     {
-        dc = GameObject.FindGameObjectWithTag ("GameController").GetComponent<DuelController>();
         controller = GetComponent<CharacterController>();
         wc = GetComponent<WeaponController>();
     }
 
     void Update()
     {
-        if (dc.currentState == DuelStates.Start)
+        if (DuelController.control.currentState == DuelStates.Start)
         {
             if (!aiEngineStarted)
             {
@@ -37,7 +35,7 @@ public class NPCController : MonoBehaviour
                 BattleAIEngine();
             }    
         }
-        else if (dc.currentState == DuelStates.Battle)
+        else if (DuelController.control.currentState == DuelStates.Battle)
         {
             if (!aiEngineStarted)
             {
@@ -88,7 +86,7 @@ public class NPCController : MonoBehaviour
 
     private void BattleAIEngine()
     {
-        if (dc.currentState != DuelStates.Battle)
+        if (DuelController.control.currentState != DuelStates.Battle)
         {
             return;
         }
