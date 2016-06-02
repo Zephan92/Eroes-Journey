@@ -12,14 +12,16 @@ public class MenuManager : MonoBehaviour
     {
         foreach (Menu menu in GetComponentsInChildren<Menu>())
         {
-            MenuOptions.Add(menu.name,menu);
+            if(!MenuOptions.ContainsKey(menu.name))
+               MenuOptions.Add(menu.name,menu);
         }
         CurrentMenu = MenuOptions[StartMenuName];
     }
 
     public void Start()
     {
-        ShowMenu(CurrentMenu.name);
+        if(MasterGameController.control.currentState == GameStates.MainMenu)
+            ShowMenu(CurrentMenu.name);
     }
 
     public static void ShowMenu(string cm)

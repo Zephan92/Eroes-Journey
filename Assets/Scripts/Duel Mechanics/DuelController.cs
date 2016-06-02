@@ -115,6 +115,7 @@ public class DuelController : MonoBehaviour
         {
             if (Input.GetButtonDown("Submit"))
             {//Do better than just loading this scene
+                MasterGameController.control.currentState = GameStates.Overworld;
                 SceneManager.LoadScene(1);
                 
             }

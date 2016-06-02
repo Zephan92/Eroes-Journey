@@ -10,21 +10,24 @@ public enum Direction
     None,
 }
 
-public class OverworldPlayerController : MonoBehaviour {
-    private Animator _animator;
-    public static bool freeplay = true;
-    public int pixelToUnits = 16;
-    public float transitionTime = 0.4f;
+public class OverworldPlayerController : MonoBehaviour
+{
+    
+    public int pixelToUnits = 1;//Don't Change this
     public Direction playerDirection = Direction.None;
     public Direction lookingDirection = Direction.Down;
     public BoxCollider[] boundaries = new BoxCollider[4];
-    private Vector3 move;
-    private Vector2 destination;
-    private BoxCollider boundary;
+
+    private Animator _animator;
+    private Vector3 _move;
+    private Vector2 _destination;
+    private BoxCollider _boundary;
+    private GameObject _eventGameObject;
+    private float _eventTransitionTime;
 
     public bool Left
     {
-        get { return _animator.GetBool("left"); }
+        get { return _animator.GetBool("Left"); }
         set { _animator.SetBool("Left", value); }
     }
     public bool Right
@@ -51,7 +54,7 @@ public class OverworldPlayerController : MonoBehaviour {
     void Start()
     {
         _animator = GetComponent<Animator>();
-        boundary = GetComponentInChildren<BoxCollider>();
+        _boundary = GetComponentInChildren<BoxCollider>();
         Down = true;
         Up = false;
         Left = false;
@@ -62,74 +65,127 @@ public class OverworldPlayerController : MonoBehaviour {
 
     void Update()
     {
-        if(freeplay)
+        switch (OverworldController.control.currentState)
         {
-
-            if (Input.GetButton("Horizontal") && !Moving)
-            {
-                if (Input.GetAxis("Horizontal") > 0)
+            case OverworldStates.EnteringOverworld:
+                break;
+            case OverworldStates.Menu:
+                break;
+            case OverworldStates.Transition:
+                break;
+            case OverworldStates.Wander:
+                if (!Moving)
                 {
-                    destination = new Vector2(transform.position.x + 16, transform.position.y);
-                    playerDirection = Direction.Right;
+                    playerDirection = Direction.None;
+                    setDestination();
                 }
-                else
-                {
-                    destination = new Vector2(transform.position.x - 16, transform.position.y);
-                    playerDirection = Direction.Left;
-                }
-
-                lookingDirection = playerDirection;
-                updateDirectionBools(playerDirection);
-                if (!checkForBoundary(playerDirection))
-                {
-                    Moving = true;
-                }
-            }
-            else if (Input.GetButton("Vertical") && !Moving)
-            {
-                if (Input.GetAxis("Vertical") > 0)
-                {
-                    playerDirection = Direction.Up;
-                    destination = new Vector2(transform.position.x, transform.position.y + 16);
-                }
-
-                else
-                {
-                    playerDirection = Direction.Down;
-                    destination = new Vector2(transform.position.x, transform.position.y - 16);
-                }
-
-                lookingDirection = playerDirection;
-                updateDirectionBools(playerDirection);
-                if (!checkForBoundary(playerDirection))
-                {
-                    Moving = true;
-                }
-            }
-            else if (!Moving)
-            {
-                playerDirection = Direction.None;
-            }
+                break;
         }
     }
 
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
         if (Moving)
         {
             updateBoundaries(0.5f);
-            movePlayer(playerDirection);
-            if (destination == new Vector2(transform.position.x, transform.position.y))
+
+            if (_destination == new Vector2(transform.position.x, transform.position.y))
             {
+                if (_eventGameObject != null)
+                {
+                    Invoke("EndWait", _eventTransitionTime);
+                }
                 Moving = false;
                 cleanBoundaries();
                 updateBoundaries(1.5f);
             }
+            else
+            {
+                movePlayer(playerDirection);
+            }
         }        
      }
 
+    public void setDestinationEvent(Direction dir, int distance, float transitionTime, GameObject eGO)
+    {
+        _eventTransitionTime = transitionTime;
+        _eventGameObject = eGO;
+        Moving = true;
+        switch (dir)
+        {
+            case Direction.Up:
+                _destination = new Vector2(transform.position.x, transform.position.y + 16 * distance);
+                break;
+            case Direction.Down:
+                _destination = new Vector2(transform.position.x, transform.position.y - 16 * distance);
+                break;
+            case Direction.Right:
+                _destination = new Vector2(transform.position.x + 16 * distance, transform.position.y);
+                break;
+            case Direction.Left:
+                _destination = new Vector2(transform.position.x - 16 * distance, transform.position.y);
+                break;
+            case Direction.None:
+                _destination = new Vector2(transform.position.x, transform.position.y);
+                Moving = false;
+                Invoke("EndWait", _eventTransitionTime);
+                break;
+        }
+        if(dir != Direction.None)
+            lookingDirection = playerDirection = dir;
+        else
+            lookingDirection = dir;
+        updateDirectionBools(playerDirection);
+        
+    }
+
+    public void setDestination()
+    {
+        if (Input.GetButton("Horizontal"))
+        {
+            if (Input.GetAxis("Horizontal") > 0)
+            {
+                _destination = new Vector2(transform.position.x + 16, transform.position.y);
+                lookingDirection = playerDirection = Direction.Right;
+            }
+            else
+            {
+                _destination = new Vector2(transform.position.x - 16, transform.position.y);
+                lookingDirection = playerDirection = Direction.Left;
+            }
+
+            updateDirectionBools(playerDirection);
+            if (!checkForBoundary(playerDirection))
+            {
+                Moving = true;
+            }
+        }
+        else if (Input.GetButton("Vertical"))
+        {
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                lookingDirection = playerDirection = Direction.Up;
+                _destination = new Vector2(transform.position.x, transform.position.y + 16);
+            }
+
+            else
+            {
+                lookingDirection = playerDirection = Direction.Down;
+                _destination = new Vector2(transform.position.x, transform.position.y - 16);
+            }
+
+            updateDirectionBools(playerDirection);
+            if (!checkForBoundary(playerDirection))
+            {
+                Moving = true;
+            }
+        }
+
+    }
+
     public void updateBoundaries(float colliderLength)
     {
-        boundary.size = new Vector3(colliderLength, colliderLength, 1);
+        _boundary.size = new Vector3(colliderLength, colliderLength, 1);
     }
 
     public void cleanBoundaries()
@@ -168,32 +224,33 @@ public class OverworldPlayerController : MonoBehaviour {
                 break;
         }
     }
+
     public void movePlayer(Direction dir)
     {
         switch (dir)
         {
             case Direction.Right:
-                move = Vector3.right;
+                _move = Vector3.right;
                 break;
 
             case Direction.Left:
-                move = Vector3.left;
+                _move = Vector3.left;
                 break;
 
             case Direction.Up:
-                move = Vector3.up;
+                _move = Vector3.up;
                 break;
 
             case Direction.Down:
-                move = Vector3.down;
+                _move = Vector3.down;
                 break;
 
             default:
-                move = Vector3.zero;
+                _move = Vector3.zero;
                 break;
         }
 
-        transform.position += move * pixelToUnits;
+        transform.position += _move * pixelToUnits;
     }
 
     public bool checkForBoundary(Direction dir)
@@ -224,5 +281,11 @@ public class OverworldPlayerController : MonoBehaviour {
                 return false;
         }
         return false;
+    }
+
+    private void EndWait()
+    {
+        _eventGameObject.GetComponent<OverworldEvent>().EndWait();
+        _eventGameObject = null;
     }
 }

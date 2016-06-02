@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public enum GameStates
 {//Different Game States
    MainMenu,
    Overworld,
-   Animation,
-   Event,
    Battle,
    Credits,
    MultiplayerMenu,
-   MultiplayerMode,
 }
 
 public class MasterGameController : MonoBehaviour {
@@ -34,32 +34,50 @@ public class MasterGameController : MonoBehaviour {
     {
         switch (currentState)
         {
-            case GameStates.Animation:
-                break;
             case GameStates.Battle:
                 break;
             case GameStates.Credits:
-                break;
-            case GameStates.Event:
                 break;
             case GameStates.MainMenu:
                 break;
             case GameStates.MultiplayerMenu:
                 break;
-            case GameStates.MultiplayerMode:
-                break;
             case GameStates.Overworld:
-                if (Input.GetButtonDown("Submit"))
-                {
-                    if (OverworldController.control.currentState != OverworldStates.Menu)
-                    {
-                        OverworldController.control.currentState = OverworldStates.Menu;
-                        MenuManager.ShowMenu("Player Menu");
-                    }
-                }
                 break;
             default:
                 break;
         }
     }
+
+    public void Save()
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/playerInfo.dat");
+
+        PlayerData data = new PlayerData();
+        //add stuff to data
+        //data.playerName = SaveFile.playerName;
+
+        bf.Serialize(file, data);
+        file.Close();
+    }
+
+    public void Load()
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat",FileMode.Open);
+
+        PlayerData data = (PlayerData) bf.Deserialize(file);
+        file.Close();
+        //grab stuff from data
+        //SaveFile.playerName = data.playerName;
+    }
+}
+
+[Serializable]
+public class PlayerData
+{
+    //probably need to update this to include dictionaries
+
+
 }

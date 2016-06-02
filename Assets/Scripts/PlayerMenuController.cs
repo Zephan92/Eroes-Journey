@@ -12,12 +12,18 @@ public class PlayerMenuController : MonoBehaviour {
     public void Battle()
     {
         MenuManager.CurrentMenu.IsOpen = false;
+        MasterGameController.control.currentState = GameStates.Battle;
         SceneManager.LoadScene(2);
     }
 
     public void ExitMenu()
     {
-        OverworldController.control.currentState = OverworldStates.Wander;
         MenuManager.CurrentMenu.IsOpen = false;
+        Invoke("TransitionToWander", 0.4f);
+    }
+
+    private void TransitionToWander()
+    {
+        OverworldController.control.currentState = OverworldStates.Wander;
     }
 }

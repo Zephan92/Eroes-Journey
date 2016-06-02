@@ -9,15 +9,6 @@ public class Changemap : MonoBehaviour {
     public GameObject parentMap;
     public GameObject entryMap;
     private bool changingMaps = false;
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     void OnTriggerStay(Collider other)
     {
@@ -25,7 +16,7 @@ public class Changemap : MonoBehaviour {
             return;
         changingMaps = true;
         player = other.transform.parent;
-        OverworldPlayerController.freeplay = false;
+        OverworldController.control.currentState = OverworldStates.Transition;
         activateNewMap();
         Invoke("changePlayerPosition", 0.5f);
         Invoke("deactivateOldMap", 1f);
@@ -35,7 +26,7 @@ public class Changemap : MonoBehaviour {
     {
         player.position = new Vector3(MapEntry.transform.position.x, MapEntry.transform.position.y, player.position.z);
         player.GetComponent<OverworldPlayerController>().updateDirectionBools(EntryDirection);
-        OverworldPlayerController.freeplay = true;
+        OverworldController.control.currentState = OverworldStates.Wander;
         changingMaps = false;
     }
 

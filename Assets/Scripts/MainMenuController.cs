@@ -15,5 +15,4 @@ public class MainMenuController : MonoBehaviour {
         SceneManager.LoadScene(1);
         MasterGameController.control.currentState = GameStates.Overworld;
     }
-
 }
