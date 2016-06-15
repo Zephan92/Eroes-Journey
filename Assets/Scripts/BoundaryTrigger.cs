@@ -6,7 +6,10 @@ public class BoundaryTrigger : MonoBehaviour {
 
     void Start()
     {
-        boundaries = GetComponentInParent<OverworldPlayerController>().boundaries;
+        if(transform.parent.tag.Equals("Player 1"))
+            boundaries = GetComponentInParent<OverworldPlayerController>().boundaries;
+        else
+            boundaries = GetComponentInParent<NPCOverworldController>().boundaries;
     }
 
     void OnTriggerEnter(Collider other)
