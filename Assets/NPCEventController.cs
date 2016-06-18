@@ -7,6 +7,7 @@ public class NPCEventController : MonoBehaviour {
     public bool eventResolved = false;
     public bool showSprite = false;
     public float transitionTime = 0.3f;
+    public EventDialog[] dialog;
     public Direction[] movementDirection;
     public int[] movementDistance;
     public float[] movementEndWait;
