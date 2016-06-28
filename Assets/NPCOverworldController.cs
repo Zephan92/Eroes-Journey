@@ -95,6 +95,7 @@ public class NPCOverworldController : MonoBehaviour {
     {
         _eventTransitionTime = transitionTime;
         _eventGameObject = eGO;
+        _eventGameObject.GetComponent<NPCEventController>().npcMoving = true;
         Moving = true;
         switch (dir)
         {
@@ -113,7 +114,7 @@ public class NPCOverworldController : MonoBehaviour {
             case Direction.None:
                 _destination = new Vector2(transform.position.x, transform.position.y);
                 Moving = false;
-                Invoke("EndWait", _eventTransitionTime);
+                _eventGameObject.GetComponent<NPCEventController>().npcMoving = false;
                 break;
         }
         if (dir != Direction.None)
@@ -225,7 +226,7 @@ public class NPCOverworldController : MonoBehaviour {
 
     private void EndWait()
     {
-        _eventGameObject.GetComponent<NPCEventController>().EndWait();
+        _eventGameObject.GetComponent<NPCEventController>().npcMoving = false;
         _eventGameObject = null;
     }
 }

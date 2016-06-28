@@ -15,7 +15,9 @@ public class MenuManager : MonoBehaviour
             if(!MenuOptions.ContainsKey(menu.name))
                MenuOptions.Add(menu.name,menu);
         }
-        CurrentMenu = MenuOptions[StartMenuName];
+
+        if(!StartMenuName.Equals(""))
+            CurrentMenu = MenuOptions[StartMenuName];
     }
 
     public void Start()

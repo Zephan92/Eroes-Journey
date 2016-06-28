@@ -5,13 +5,16 @@ public class NPCEventController : MonoBehaviour {
 
     public bool eventActivated = false;
     public bool eventResolved = false;
+    public bool hideSpriteAtEventEnd = true;
     public bool showSprite = false;
-    public float transitionTime = 0.3f;
+    public bool npcMoving = false;
+    public bool npcTalking = false;
+
     public EventDialog[] dialog;
     public Direction[] movementDirection;
     public int[] movementDistance;
     public float[] movementEndWait;
-    
+    public int[] dialogText;
 
     private GameObject _npc;
     private bool _showingSprite = false;
@@ -22,8 +25,7 @@ public class NPCEventController : MonoBehaviour {
 
     public void Start()
     {
-        gameObject.GetComponentInChildren<Renderer>().enabled = false;
-        gameObject.GetComponentInChildren<BoxCollider>().enabled = false;
+        toggleSpriteVisibility(showSprite);
         _npc = gameObject;
     }
 
@@ -40,17 +42,18 @@ public class NPCEventController : MonoBehaviour {
     {
         if (showSprite && !_showingSprite || eventActivated)
         {
-            gameObject.GetComponentInChildren<Renderer>().enabled = true;
-            gameObject.GetComponentInChildren<BoxCollider>().enabled = true;
+            toggleSpriteVisibility(true);
             showSprite = true;
-            _showingSprite = true;
             _inEvent = true;
         }
         else if(!showSprite && _showingSprite)
         {
-            gameObject.GetComponentInChildren<Renderer>().enabled = false;
-            gameObject.GetComponentInChildren<BoxCollider>().enabled = false;
-            _showingSprite = false;
+            toggleSpriteVisibility(false);
+        }
+
+        if (currentlyInSection && !npcMoving && !npcTalking)
+        {
+            Invoke("EndWait", movementEndWait[_currentSection]);
         }
     }
 
@@ -62,17 +65,23 @@ public class NPCEventController : MonoBehaviour {
             {
                 if (!_npc.GetComponent<NPCOverworldController>().Moving && !currentlyInSection)
                 {
-                    _npc.GetComponent<NPCOverworldController>().setDestinationEvent(movementDirection[_currentSection], movementDistance[_currentSection], movementEndWait[_currentSection], gameObject);
                     currentlyInSection = true;
+                    _npc.GetComponent<NPCOverworldController>().setDestinationEvent(movementDirection[_currentSection], movementDistance[_currentSection], movementEndWait[_currentSection], gameObject);                 
+                    if(dialogText[_currentSection] >= 0)
+                        dialog[dialogText[_currentSection]].StartDialog(dialogText[_currentSection], gameObject);
                 }
             }
 
             if (_sectionFinished[_sectionFinished.Length - 1])
             {
+                if(hideSpriteAtEventEnd)
+                    showSprite = false;
+
                 _inEvent = false;
                 eventActivated = false;
                 eventResolved = true;
             }
+
         }
     }
 
@@ -83,4 +92,14 @@ public class NPCEventController : MonoBehaviour {
         if (_currentSection < _sectionFinished.Length - 1)
             _currentSection++;
     }
+
+    private void toggleSpriteVisibility(bool visibility)
+    {
+        foreach (Renderer childRenderer in gameObject.GetComponentsInChildren<Renderer>())
+            childRenderer.enabled = visibility;
+        foreach (BoxCollider childBoxCollider in gameObject.GetComponentsInChildren<BoxCollider>())
+            childBoxCollider.enabled = visibility;
+        _showingSprite = visibility;
+    }
+
 }

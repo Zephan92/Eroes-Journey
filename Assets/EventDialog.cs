@@ -7,8 +7,11 @@ public class EventDialog : MonoBehaviour {
     private Text[] dialogEvents;
     private string[,] dialog = new string[15,5];
     public bool inDialog = false;
+    public bool inEvent = false;
     private int currentLine = 0;
     public int currentDialog = 0;
+    private GameObject _eventGameObject;
+
     public void Start()
     {
         dialogEvents = GetComponents<Text>();
@@ -28,32 +31,38 @@ public class EventDialog : MonoBehaviour {
             {
                 FetchNextLine();
             }
-
-            if (!inDialog && Input.GetButtonDown("Submit"))
-            {
-                StartDialog(currentDialog);
-            }
         }
     }
 
-    public void StartDialog(int dialog)
+    public void StartDialog(int dialog, GameObject eGO)
     {
+        _eventGameObject = eGO;
+        _eventGameObject.GetComponent<NPCEventController>().npcTalking = true;
         currentDialog = dialog;
+        currentLine = 0;
         inDialog = true;
         PrintDialog();
     }
 
     private void FetchNextLine()
     {
-        if (dialog[currentDialog,currentLine + 1] == null)
+
+        if (currentLine == dialog.GetLength(1) -2)
         {
-            //end dialog
+            EndDialog();
         }
         else
         {
             currentLine++;
             PrintDialog();
         }
+    }
+
+    public void EndDialog()
+    {
+        currentLine = 0;
+        inDialog = false;
+        _eventGameObject.GetComponent<NPCEventController>().npcTalking = false;
     }
 
     public void PrintDialog()
