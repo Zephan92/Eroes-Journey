@@ -17,9 +17,18 @@ public class EventDialog : MonoBehaviour {
         dialogEvents = GetComponents<Text>();
         for (int i = 0; i < dialogEvents.Length; i++)
         {
-            string [] lines = dialogEvents[i].text.Split('`');
+            dialogEvents[i].text = SanitizeDialog(dialogEvents[i].text);
+            string [] lines = dialogEvents[i].text.Split('\n');
             for (int j = 0; j < lines.Length; j++)
-                dialog[i,j] = lines[j];
+            {
+                dialog[i, j] = lines[j];
+                if (lines[j].Length > 59)
+                {
+                    Debug.LogError("Dialog " + i + ":" + j + " on \"" + name + "\" is too long!\n" 
+                        + "\""+ dialog[i, j].Substring(0,59) + "\"");
+                }
+            }
+                
         }
     }
 
@@ -47,7 +56,7 @@ public class EventDialog : MonoBehaviour {
     private void FetchNextLine()
     {
 
-        if (currentLine == dialog.GetLength(1) -2)
+        if (currentLine == dialog.GetLength(1) - 1 || dialog[currentDialog, currentLine + 1] == null)
         {
             EndDialog();
         }
@@ -68,5 +77,13 @@ public class EventDialog : MonoBehaviour {
     public void PrintDialog()
     {
         Debug.Log(dialog[currentDialog,currentLine]);
+    }
+
+    private string SanitizeDialog(string dialog)
+    {
+        dialog = dialog.Replace("\n\n\n\n", "\n");
+        dialog = dialog.Replace("\n\n\n", "\n");
+        dialog = dialog.Replace("\n\n", "\n");
+        return dialog;
     }
 }
